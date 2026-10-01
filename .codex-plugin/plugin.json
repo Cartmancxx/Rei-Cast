@@ -1,0 +1,25 @@
+{
+  "name": "rei-cast",
+  "version": "0.2.0+codex.20261001062000",
+  "description": "轻量 D-CAST 扩展屏助手：原创像素头像、Codex 任务状态、Dot 对话本地桥接、天气和电脑性能，支持不同尺寸与方向。",
+  "author": {
+    "name": "Cartmancxx"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Rei Cast · 零",
+    "shortDescription": "让水冷小屏成为你的 Codex 助手。",
+    "longDescription": "Windows 原生 D-CAST 扩展屏助手，适配横屏、竖屏与方形屏，显示原创像素头像、Codex 本地任务、时间、天气和系统使用率。Dot 可以通过已授权的本地电脑发布可见对话，长回复自动翻页。普通用户登录自启动，无需屏幕程序调用 AI。",
+    "developerName": "Cartmancxx",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "帮我调整 Rei Cast 水冷小屏助手的外观和设置。",
+    "brandColor": "#A4D7F6",
+    "logo": "./assets/companion.png",
+    "screenshots": [
+      "./assets/preview-landscape.png",
+      "./assets/preview-portrait.png",
+      "./assets/preview-compact.png"
+    ]
+  }
+}

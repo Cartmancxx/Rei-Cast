@@ -1,0 +1,38 @@
+name: D-Cast compatibility report
+description: Share a model and display configuration that works or needs adjustment.
+title: "[Compatibility] "
+body:
+  - type: input
+    id: model
+    attributes:
+      label: Cooler / device model
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Windows and DeepCreative versions
+    validations:
+      required: true
+  - type: input
+    id: size
+    attributes:
+      label: Display resolution and orientation
+      placeholder: "854x480, landscape"
+    validations:
+      required: true
+  - type: dropdown
+    id: selection
+    attributes:
+      label: Selection method
+      options:
+        - Auto detected
+        - Manually selected
+        - Screen not listed in Windows
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome and reproduction steps
+      description: Include actual panel behavior. Remove private dialogue before sharing images. Do not attach credentials, full logs or private configuration.
+    validations:
+      required: true

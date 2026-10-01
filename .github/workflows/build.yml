@@ -1,0 +1,54 @@
+name: Windows build and release
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Compile, verify and package
+        shell: pwsh
+        run: |
+          ./scripts/build.ps1
+          ./scripts/verify.ps1
+          ./scripts/package.ps1
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: rei-cast-windows-x64
+          path: |
+            dist/rei-cast-windows-x64.zip
+            dist/SHA256SUMS.txt
+            artifacts/test-report.json
+  release:
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    needs: build
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Rebuild verified release
+        shell: pwsh
+        run: |
+          ./scripts/build.ps1
+          ./scripts/verify.ps1
+          ./scripts/package.ps1
+      - name: Publish the first release of this version
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = (Get-Content .codex-plugin/plugin.json -Raw -Encoding UTF8 | ConvertFrom-Json).version.Split('+')[0]
+          $tag = if ($env:GITHUB_REF -like 'refs/tags/v*') { $env:GITHUB_REF_NAME } else { 'v'+$version }
+          if ($tag -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+$') { throw 'Release tag must be vMAJOR.MINOR.PATCH.' }
+          gh release view $tag --repo "$env:GITHUB_REPOSITORY" *> $null
+          if ($LASTEXITCODE -eq 0) { Write-Output "Release $tag already exists; assets are preserved."; exit 0 }
+          gh release create $tag dist/rei-cast-windows-x64.zip dist/SHA256SUMS.txt --target "$env:GITHUB_SHA" --repo "$env:GITHUB_REPOSITORY" --title "Rei Cast $tag" --notes-file RELEASE_NOTES.md
+          if ($LASTEXITCODE -ne 0) { throw 'GitHub release publication failed.' }

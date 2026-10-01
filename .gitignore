@@ -1,0 +1,14 @@
+/ReiCast.exe
+/dist/
+/artifacts/
+*.tmp
+*.log
+runtime.json
+config.json
+weather-cache.json
+dot-dialogue.json
+external-task.json
+startup-launch.json
+startup-error.txt
+assets/rei.png
+/.vs/
